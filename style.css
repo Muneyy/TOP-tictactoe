@@ -1,0 +1,51 @@
+body {
+    /* display: flex; */
+    margin: 100px 20%;
+    /* flex-direction: column; */
+}
+
+.container {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    grid-template-rows: repeat(3, auto);
+    gap: 20px;
+    column-gap: 20px;
+    width: 300px;
+    margin-bottom: 20px;
+}
+
+.square-even,
+.square-odd {
+    width: 150px;
+    height: 150px;
+}
+
+
+.square-even {
+    background-color: antiquewhite;
+}
+
+.square-odd {
+    background-color: aquamarine;
+}
+
+.reset-button {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+.marked-0 {
+    background-image: url(./images/artichoke.svg);
+    background-size: contain;
+}
+
+.marked-1 {
+    background-image: url(./images/heart.svg);
+    background-size: contain;
+}
+
+.player-results {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
