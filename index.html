@@ -9,19 +9,28 @@
     <script src="script.js" defer></script>
 </head>
 <body>
-    <h1> Play a game of Tic-Tac-Toe!</h1>
-    <div class="container">
+    <div class="content">
+        <h1> Play a game of Tic-Tac-Toe!</h1>
+        <div class="container">
+        </div>
+        <div class="result">
+            <h1>Result: </h1>
+            <p class="text-result">Who will win?</p>
+        </div>
+        <div class="player-results">
+            <h2>Artichokes: </h2>
+            <h3 id="player-1-result">0</h3>
+            <h2>Hearts: </h2>
+            <h3 id="player-2-result">0</h3>
+        </div>
+        <div class="player-buttons">
+            <button class="reset-button">
+                Play more!
+            </button>
+            <button class="ai-button">
+                Play an AI!
+            </button>
+        </div>
     </div>
-    <div class="result">
-        <h1>Result: </h1>
-        <p class="text-result">Who will win?</p>
-    </div>
-    <div class="player-results">
-        <h2>Artichokes: </h2>
-        <h3 id="player-1-result">0</h3>
-        <h2>Hearts: </h2>
-        <h3 id="player-2-result">0</h3>
-    </div>
-    <button class="reset-button">Play more!</button>
 </body>
 </html>

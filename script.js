@@ -3,13 +3,33 @@ const Module = (function () {
     const createPlayers = {}
     let squareArray = [];
     let playerArray = [];
-    const squareArrayDOM = [];
+    let randomArrayAI = [];
     const textResult = document.querySelector(".text-result");
     const playerOneResult = document.getElementById("player-1-result");
     const playerTwoResult = document.getElementById("player-2-result");
     let playerOneWins = 0;
     let playerTwoWins = 0;
     let gameIsOver = 0;
+    let playingAI = 0;
+
+    const resetButton = document.querySelector(".reset-button");
+    resetButton.addEventListener('click', () => {
+        Module.moduleGameBoard.resetGame();
+        Module.createPlayers.createPlayer();
+        Module.createPlayers.resetAI();
+        Module.moduleGameBoard.gameBoard();
+    })
+
+    const playAI = document.querySelector(".ai-button");
+    playAI.addEventListener('click', () => {
+        // Module.moduleGameBoard.resetGame();
+        Module.moduleGameBoard.resetGame();
+        Module.createPlayers.createPlayer();
+        Module.moduleGameBoard.gameBoard();
+        Module.createPlayers.resetAI();
+        Module.createPlayers.createAI();
+        // Module.moduleGameBoard.gameBoard();
+    })
 
 
     //creates interactable square Object 
@@ -29,7 +49,6 @@ const Module = (function () {
         square.classList.add(`no${index}`);
 
 
-
         // Reminder!
         // it's better to create in a separate function for a cleaner code
         square.addEventListener('click', () => {
@@ -38,43 +57,71 @@ const Module = (function () {
             // no object interaction yet
             // markes status of each clicked square as either 1 or 2
             // 1 is for player 1 and 2 is for player 2
-            if (playerArray[0].turn == 1 && squareArray[arrayIndex].status == 0) {
-                square.classList.remove("marked-1");
-                square.classList.add("marked-0");
-                squareArray[arrayIndex].status = 1;
-                playerArray[0].turn = 0;
-            } else if (playerArray[0].turn == 0 && squareArray[arrayIndex].status == 0) {
-                square.classList.remove("marked-0");
-                square.classList.add("marked-1");
-                playerArray[0].turn = 1;
-                squareArray[arrayIndex].status = 2;
+            if (playingAI == 0) {
+                if (playerArray[0].turn == 1 && squareArray[arrayIndex].status == 0) {
+                    // square.classList.remove("marked-1");
+                    square.classList.add("marked-0");
+                    squareArray[arrayIndex].status = 1;
+                    playerArray[0].turn = 0;
+                } else if (playerArray[0].turn == 0 && squareArray[arrayIndex].status == 0) {
+                    // square.classList.remove("marked-0");
+                    square.classList.add("marked-1");
+                    playerArray[0].turn = 1;
+                    squareArray[arrayIndex].status = 2;
+                }
+    
+                gameChecker();
+            } else if (playingAI == 1 && randomArrayAI.length != 8) {
+                if (playerArray[0].turn == 1 && squareArray[arrayIndex].status == 0) {
+                    // square.classList.remove("marked-1");
+                    square.classList.add("marked-0");
+                    squareArray[arrayIndex].status = 1;
+                    playerArray[0].turn = 0;
+                    randomArrayAI.push(arrayIndex);
+                    gameChecker();
+                    if (gameIsOver != 1) {
+                        turnAI(arrayIndex);
+                        gameChecker();
+                    }
+                }
+            } else if (playingAI == 1 && randomArrayAI.length == 8) {
+                if (playerArray[0].turn == 1 && squareArray[arrayIndex].status == 0) {
+                    // square.classList.remove("marked-1");
+                    square.classList.add("marked-0");
+                    squareArray[arrayIndex].status = 1;
+                    playerArray[0].turn = 0;
+                    gameChecker();
+                }
             }
-
-            gameChecker();
-            // console.table(squareArray);
-            
-            // made it so that marked squares' values cannot be changed anymore
-            
-
-
-            // if (squareArray[arrayIndex].status == 0) {
-            //     squareArray[arrayIndex].status = 1;
-            // } else if (squareArray[arrayIndex].status == 1)  {
-            //     squareArray[arrayIndex].status = 0;
-            // }
         })
         return [square, squareObj];
     };
 
+    const turnAI = function (arrayIndex) {
+        let random = Math.floor(Math.random()* 9);
+        while (randomArrayAI.includes(random)) {
+            random = Math.floor(Math.random()* 9);
+        }
+        if (squareArray[random].status == 0) {
+            let squareDomAI = document.querySelector(`.no${random+1}`);
+            squareDomAI.classList.add("marked-1");
+            squareArray[random].status = 2;
+            playerArray[0].turn = 1;
+        }
+        console.log(random);
+        randomArrayAI.push(random);
+
+    }
+
     moduleGameBoard.gameBoard = function () {
 
         // This block is to reset the board
-        const body = document.getElementsByTagName("BODY")[0];
+        const content = document.querySelector(".content");
         const div = document.querySelector(".container");
-        body.removeChild(div)
+        content.removeChild(div)
         const replacement = document.createElement("div")
         replacement.classList.add("container");
-        body.appendChild(replacement);
+        content.appendChild(replacement);
         // This block is to reset the board
 
         if (squareArray.length == 0) {
@@ -102,10 +149,23 @@ const Module = (function () {
         playerArray[0].turn = 1;
     };
 
+    createPlayers.createAI = function () {
+        playingAI = 1;
+        randomArrayAI = [];
+        playAI.classList.add("ai-toggle");
+    }
+
+    createPlayers.resetAI = function () {
+        playingAI = 0;
+        randomArrayAI = [];
+        playAI.classList.remove("ai-toggle");
+    }
+
     // makes the game invalid because program does not recognize turn = 3
     const gameOver = function (winner) {
         playerArray[0].turn = 3;
         playerArray[1]. turn = 3;
+        randomArrayAI = [];
         if (winner == 1 && gameIsOver == 0) {
             playerOneWins += 1;
             playerOneResult.textContent = `${playerOneWins}`
@@ -192,9 +252,3 @@ const Module = (function () {
 Module.createPlayers.createPlayer();
 Module.moduleGameBoard.gameBoard();
 
-const resetButton = document.querySelector(".reset-button");
-resetButton.addEventListener('click', () => {
-    Module.moduleGameBoard.resetGame();
-    Module.createPlayers.createPlayer();
-    Module.moduleGameBoard.gameBoard();
-})
